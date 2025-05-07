@@ -35,6 +35,7 @@ Route::group(['middleware' => ['auth', 'optimizeImages']], function() {
     // ORDERS
     Route::get('orders', [OrderController::class, 'index'])->name('order.index')->middleware('permission:order access');
     Route::get('order/create', [OrderController::class, 'create'])->name('order.create')->middleware('permission:order create');
+    Route::get('order/{id}', [OrderController::class, 'show'])->name('order.show')->middleware('permission:order access');
 
     // COMPANIES ROUTES
     Route::group(['middleware' => 'permission:company access'], function() {

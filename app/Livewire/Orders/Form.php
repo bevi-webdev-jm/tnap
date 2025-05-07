@@ -9,6 +9,8 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderLog;
 
+use Illuminate\Support\Facades\Session;
+
 class Form extends Component
 {
     public $ba_name, $customer_name, $address, $order_date;
@@ -53,6 +55,14 @@ class Form extends Component
         foreach($this->products as $product) {
             $this->details[$product->id]['quantity'] = 0;
             $this->details[$product->id]['amount'] = NULL;
+        }
+
+        $order = Session::get('re-order-data');
+        if(!empty($order)) {
+            $this->customer_name = $order->customer_name;
+            $this->address = $order->address;
+
+            Session::forget('re-order-data');
         }
 
     }
@@ -138,7 +148,14 @@ class Form extends Component
         }
         
        
-
+        // order log
+        $order_log = new OrderLog([
+            'order_id' => $this->order->id,
+            'user_id' => auth()->user()->id,
+            'status' => 'draft',
+            'remarks' => NULL
+        ]);
+        $order_log->save();
         
 
         $this->show_summary = 1;
@@ -150,8 +167,8 @@ class Form extends Component
             'status' => 'submitted'
         ]);
 
-         // order log
-         $order_log = new OrderLog([
+        // order log
+        $order_log = new OrderLog([
             'order_id' => $this->order->id,
             'user_id' => auth()->user()->id,
             'status' => 'submitted',

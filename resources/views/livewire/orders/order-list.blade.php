@@ -2,12 +2,26 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title text-xl">ORDER LIST</h3>
+            <div class="card-tools">
+                @can('order create')
+                    <a href="{{route('order.create')}}" class="btn btn-primary btn-lg">
+                        <i class="fa fa-plus mr-1"></i>
+                        NEW ORDER
+                    </a>
+                @endcan
+            </div>
         </div>
         <div class="card-body">
 
+            <div class="row">
+                <div class="col-12">
+                    {{$orders->links()}}
+                </div>
+            </div>
+
             <ul class="list-group">
                 @foreach($orders as $order)
-                    <a href="" class="text-dark text-lg">
+                    <a href="{{route('order.show', encrypt($order->id))}}" class="text-dark text-lg">
                         <li class="list-group-item row-hover">
                             <div class="row">
                                 <div class="col-lg-2 text-center align-middle">
