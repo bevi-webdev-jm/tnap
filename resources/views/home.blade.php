@@ -58,6 +58,13 @@
         .small-box:hover {
             transform: scale(1.04);
         }
+
+        .bg-info {
+            background: linear-gradient(0deg, rgb(54 207 201 / 70%), rgb(24 129 143));
+        }
+        .bg-success {
+            background: linear-gradient(0deg, rgb(141 207 121), rgb(63 167 0))
+        }
     </style>
 @endpush
 
