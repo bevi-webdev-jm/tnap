@@ -10,7 +10,7 @@
 
 @section('content_body')
 
-    
+    <livewire:orders.order-list/>
 
 @stop
 
@@ -19,6 +19,13 @@
 @push('css')
     {{-- Add here extra stylesheets --}}
     <style>
+        .row-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+        }
+
+        .row-hover:hover {
+            transform: scale(1.02);
+        }
     </style>
 @endpush
 
