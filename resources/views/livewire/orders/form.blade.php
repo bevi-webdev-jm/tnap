@@ -1,6 +1,6 @@
 <div>
 
-    @if($show_summary)
+    @if($show_summary == 1)
 
         <div class="card">
             <div class="card-header">
@@ -9,17 +9,7 @@
             <div class="card-body">
 
                 <div class="row">
-                    <div class="col-lg-3">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">ORDER NUMBER</h4>
-                            </div>
-                            <div class="card-body text-center align-middle">
-                                <strong class="text-xl">{{$order->order_number}}</strong>
-                            </div>
-                        </div>
-                    </div>
-                
+
                     <!-- HEADER -->
                     <div class="col-12">
                         <ul class="list-group">
@@ -89,6 +79,27 @@
                     <i class="fa fa-save"></i>
                     SUBMIT ORDER
                 </button>
+            </div>
+        </div>
+
+    @elseif($show_summary == 2)
+
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">ORDER NUMBER</h4>
+            </div>
+            <div class="card-body text-center align-middle">
+                <strong class="text-xl">ORDER NUMBER: {{$order->order_number}}</strong>
+            </div>
+            <div class="card-footer text-right">
+                <button class="btn btn-lg btn-primary" wire:click.prevent="newOrder">
+                    <i class="fa fa-plus mr-1"></i>
+                    NEW ORDER
+                </button>
+                <a href="" class="btn btn-lg btn-default">
+                    <i class="fa fa-list mr-1"></i>
+                    ORDER LIST
+                </a>
             </div>
         </div>
 

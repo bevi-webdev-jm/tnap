@@ -163,5 +163,11 @@ class Form extends Component
         activity('created')
             ->performedOn($this->order)
             ->log(':causer.name has created an order :subject.order_number');
+
+        $this->show_summary = 2;
+    }
+
+    public function newOrder() {
+        $this->resetExcept('ba_name', 'order_date', 'products');
     }
 }
