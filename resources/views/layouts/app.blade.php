@@ -46,8 +46,8 @@
     </div>
 
     <strong>
-        <a href="{{ config('app.company_url', '#') }}">
-            {{ config('app.company_name', 'My company') }}
+        <a href="{{ config('app.company_url', 'https://www.bevi.com.ph/') }}">
+            {{ config('app.company_name', 'BEVI') }}
         </a>
     </strong>
 @stop

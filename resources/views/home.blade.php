@@ -2,8 +2,8 @@
 
 {{-- Customize layout sections --}}
 
-@section('subtitle', 'Welcome')
-@section('content_header_title', 'Home')
+@section('subtitle', 'WELCOME')
+@section('content_header_title', 'HOME')
 @section('content_header_subtitle', 'MENU')
 
 {{-- Content body: main page content --}}
@@ -11,19 +11,37 @@
 @section('content_body')
 
     <div class="row">
-        <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-info">
-                <div class="inner">
-                        <h3>150</h3>
-
-                        <p>New Orders</p>
-                </div>
-                <div class="icon">
-                    <i class="fa fa-shopping-bag"></i>
-                </div>
+        @can('order create')
+            <div class="col-lg-4 col-sm-12">
+                <a href="{{route('order.create')}}">
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>NEW ORDER</h3>
+                            <small class="mb-2">create new order</small>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-shopping-bag"></i>
+                        </div>
+                    </div>
+                </a>
             </div>
-        </div>
+        @endcan
+
+        @can('order access')
+            <div class="col-lg-4 col-sm-12">
+                <a href="{{route('order.index')}}">
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3>ORDER LIST</h3>
+                            <small class="mb-2">list of orders</small>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-list"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        @endcan
     </div>
 
 @stop
@@ -33,11 +51,17 @@
 @push('css')
     {{-- Add here extra stylesheets --}}
     <style>
+        .small-box {
+            transition: transform 0.3s ease;
+        }
+
+        .small-box:hover {
+            transform: scale(1.04);
+        }
     </style>
 @endpush
 
 {{-- Push extra scripts --}}
 
 @push('js')
-    <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
 @endpush
