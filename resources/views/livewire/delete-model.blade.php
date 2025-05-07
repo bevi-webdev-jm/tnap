@@ -15,8 +15,9 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="form-group">
+                            <input type="text" name="username" autocomplete="username" hidden>
                             <label for="password">Please enter password to continue.</label>
-                            <input type="password" id="password" class="form-control" wire:model.lazy="password">
+                            <input type="password" id="password" class="form-control" wire:model.lazy="password" autocomplete="new-password">
                             @error('password') <span class="text-danger">{{ $message }}</span> @enderror
                             <p class="text-danger">{{$error_message}}</p>
                         </div>
