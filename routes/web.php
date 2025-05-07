@@ -3,11 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\GoogleController;
 
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\SystemLogController;
-use App\Http\Controllers\SystemSettingController;
+use App\Http\Controllers\{
+    RoleController, UserController, CompanyController,
+    SystemLogController, SystemSettingController, OrderController
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +31,10 @@ Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallba
 Route::group(['middleware' => ['auth', 'optimizeImages']], function() {
     // PROFILE
     Route::get('profile/{id}', [UserController::class, 'profile'])->name('profile');
+
+    // ORDERS
+    Route::get('orders', [OrderController::class, 'index'])->name('order.index')->middleware('permission:order access');
+    Route::get('order/create', [OrderController::class, 'create'])->name('order.create')->middleware('permission:order create');
 
     // COMPANIES ROUTES
     Route::group(['middleware' => 'permission:company access'], function() {
