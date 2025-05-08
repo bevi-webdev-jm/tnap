@@ -7,6 +7,7 @@ use Livewire\Component;
 use App\Models\OrderLog;
 
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class Show extends Component
 {
@@ -28,7 +29,27 @@ class Show extends Component
 
     public function render()
     {
-        return view('livewire.orders.show');
+        $approval_dates = OrderLog::select(DB::raw('DATE(created_at) as date'))
+            ->groupBy('date')
+            ->orderBy('date', 'DESC')
+            ->where('order_id', $this->order->id)
+            ->paginate(5, ['*'], 'order-log-page');
+
+        $approval_data = [];
+        foreach($approval_dates as $data) {
+            $approvals = OrderLog::with('user')
+                ->orderBy('created_at', 'DESC')
+                ->where('order_id', $this->order->id)
+                ->where(DB::raw('DATE(created_at)'), $data->date)
+                ->get();
+            
+            $approval_data[$data->date] = $approvals;
+        }
+
+        return view('livewire.orders.show')->with([
+            'approval_dates' => $approval_dates,
+            'approvals' => $approval_data
+        ]);
     }
 
     public function submitOrder() {
