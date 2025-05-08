@@ -23,6 +23,7 @@ class PermissionSeeder extends Seeder
                 'order re-order'    => 'Allow user to re-order.',
                 'order edit'        => 'Allow user to edit order details.',
                 'order cancel'      => 'Allow user to cancel order.',
+                'order history'     => 'Allow user to view order history.',
                 'order delete'      => 'Allow user to delete order.',
             ],
             'Companies' => [

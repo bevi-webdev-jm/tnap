@@ -25,7 +25,7 @@
                 @endcan
 
                 @can('order re-order')
-                    <button class="btn btn-success" wire:click.prevent="reOrder">
+                    <button class="btn btn-info" wire:click.prevent="reOrder">
                         <i class="fa fa-recycle mr-1"></i>
                         RE-ORDER
                     </button>
@@ -44,7 +44,7 @@
                 <div class="card-body px-2 py-4">
                     <ul class="list-group">
                         <li class="list-group-item">
-                            <strong>ORDER NUMBER: </strong> <span class="float-right">{{$order->order_number}}</span>
+                            <strong>ORDER NUMBER: </strong> <span class="badge badge-success float-right text-lg">{{$order->order_number}}</span>
                         </li>
                         <li class="list-group-item">
                             <strong>BA NAME: </strong> <span class="float-right">{{$order->user->name}}</span>
@@ -112,13 +112,70 @@
                     </table>
                 </div>
                 <div class="card-footer text-right">
-                    <button class="btn btn-success" wire:click.prevent="completeOrder">
-                        <i class="fa fa-check mr-1"></i>
-                        COMPLETED
-                    </button>
+                    @if($order->status == 'submitted')
+                        <button class="btn btn-success" wire:click.prevent="completeOrder">
+                            <i class="fa fa-check mr-1"></i>
+                            COMPLETED
+                        </button>
+                    @endif
                 </div>
             </div>
             
+            @can('order history')
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">APPROVALS</h3>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="timeline timeline-inverse">
+
+                            @foreach($approvals as $date => $data)
+                                {{-- DATE LABEL --}}
+                                <div class="time-label">
+                                    <span class="bg-primary text-uppercase">
+                                        {{date('M j Y', strtotime($date))}}
+                                    </span>
+                                </div>
+            
+                                @foreach($data as $approval)
+                                    <!-- timeline item -->
+                                    <div>
+                                        <i class="fas fa-user bg-{{$status_arr[$approval->status]}}"></i>
+            
+                                        <div class="timeline-item">
+                                            <span class="time"><i class="far fa-clock"></i> {{$approval->created_at->diffForHumans()}}</span>
+            
+                                            <h3 class="timeline-header {{!empty($approval->remarks) ? '' : 'border-0'}}">
+                                                <a href="#">{{$approval->user->name}}</a> <span class="mx-2 badge bg-{{$status_arr[$approval->status]}}">{{$approval->status}}</span> the trip request
+                                            </h3>
+            
+                                            @if(!empty($approval->remarks))
+                                                <div class="timeline-body">
+                                                    <label class="mb-0">REMARKS:</label>
+                                                    <pre class="mb-0 ml-2">{{$approval->remarks ? preg_replace('/[^\S\n]+/', ' ', $approval->remarks) : '-'}}</pre>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+            
+                            @endforeach
+            
+                            <div>
+                                <i class="far fa-clock bg-gray"></i>
+                            </div>
+                        </div>
+            
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                {{$approval_dates->links()}}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            @endcan
         </div>
     </div>
 </div>

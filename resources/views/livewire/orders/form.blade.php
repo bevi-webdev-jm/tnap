@@ -96,7 +96,7 @@
                     <i class="fa fa-plus mr-1"></i>
                     NEW ORDER
                 </button>
-                <a href="" class="btn btn-lg btn-default">
+                <a href="{{route('order.index')}}" class="btn btn-lg btn-default">
                     <i class="fa fa-list mr-1"></i>
                     ORDER LIST
                 </a>
