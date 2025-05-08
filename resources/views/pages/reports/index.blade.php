@@ -23,4 +23,6 @@
 {{-- Push extra scripts --}}
 
 @push('js')
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
 @endpush
