@@ -23,4 +23,8 @@ class OrderController extends Controller
             'order' => $order
         ]);
     }
+
+    public function report() {
+        return view('pages.reports.index');
+    }
 }
