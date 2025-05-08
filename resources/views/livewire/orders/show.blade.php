@@ -1,37 +1,41 @@
 <div>
     <div class="card">
         <div class="card-header">
-            <span class="badge badge-{{$status_arr[$order->status]}} text-lg">{{$order->status}}</span>
-            <div class="card-tools">
-                <a href="{{route('order.index')}}" class="btn btn-default">
-                    <i class="fa fa-list mr-1"></i>
-                    ORDER LIST
-                </a>
+            <div class="row">
+                <div class="col-lg-6">
+                    <span class="badge badge-{{$status_arr[$order->status]}} text-lg">{{$order->status}}</span>
+                </div>
+                <div class="col-lg-6 mt-1 text-right">
+                    <a href="{{route('order.index')}}" class="btn btn-default btn-sm">
+                        <i class="fa fa-list mr-1"></i>
+                        ORDER LIST
+                    </a>
 
-                @if($order->status == 'draft')
-                    <button class="btn btn-primary" wire:click.prevent="submitOrder">
-                        <i class="fa fa-save mr-1"></i>
-                        SUBMIT
-                    </button>
-                @endif
-
-                @can('order cancel')
-                    @if($order->status == 'draft' || $order->status == 'submitted')
-                        <button class="btn btn-danger" wire:click.prevent="cancelOrder">
-                            <i class="fa fa-ban mr-1"></i>
-                            CANCEL
+                    @if($order->status == 'draft')
+                        <button class="btn btn-primary btn-sm" wire:click.prevent="submitOrder">
+                            <i class="fa fa-save mr-1"></i>
+                            SUBMIT
                         </button>
                     @endif
-                @endcan
 
-                @can('order re-order')
-                    <button class="btn btn-info" wire:click.prevent="reOrder">
-                        <i class="fa fa-recycle mr-1"></i>
-                        RE-ORDER
-                    </button>
-                @endcan
-                
+                    @can('order cancel')
+                        @if($order->status == 'draft' || $order->status == 'submitted')
+                            <button class="btn btn-danger btn-sm" wire:click.prevent="cancelOrder">
+                                <i class="fa fa-ban mr-1"></i>
+                                CANCEL
+                            </button>
+                        @endif
+                    @endcan
+
+                    @can('order re-order')
+                        <button class="btn btn-info btn-sm" wire:click.prevent="reOrder">
+                            <i class="fa fa-recycle mr-1"></i>
+                            RE-ORDER
+                        </button>
+                    @endcan
+                </div>
             </div>
+            
         </div>
     </div>
 
@@ -112,12 +116,14 @@
                     </table>
                 </div>
                 <div class="card-footer text-right">
-                    @if($order->status == 'submitted')
-                        <button class="btn btn-success" wire:click.prevent="completeOrder">
-                            <i class="fa fa-check mr-1"></i>
-                            COMPLETED
-                        </button>
-                    @endif
+                    @can('order complete')
+                        @if($order->status == 'submitted')
+                            <button class="btn btn-success" wire:click.prevent="completeOrder">
+                                <i class="fa fa-check mr-1"></i>
+                                COMPLETED
+                            </button>
+                        @endif
+                    @endcan
                 </div>
             </div>
             
