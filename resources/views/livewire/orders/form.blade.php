@@ -1,5 +1,18 @@
 <div>
 
+    <div class="row mb-2">
+        <div class="col-12 text-right">
+            <a href="{{route('home')}}" class="btn btn-default">
+                <i class="fa fa-home mr-1"></i>
+                HOME
+            </a>
+            <a href="{{route('order.index')}}" class="btn btn-info">
+                <i class="fa fa-list mr-1"></i>
+                ORDER LIST
+            </a>
+        </div>
+    </div>
+
     @if($show_summary == 1)
 
         <div class="card">
@@ -89,17 +102,15 @@
                 <h4 class="card-title">ORDER NUMBER</h4>
             </div>
             <div class="card-body text-center align-middle">
-                <strong class="text-xl">ORDER NUMBER: {{$order->order_number}}</strong>
+                <strong class="text-xl">ORDER NUMBER: </strong>
+                <br>
+                <strong class="text-xl badge badge-success">{{$order->order_number}}</strong>
             </div>
             <div class="card-footer text-right">
                 <button class="btn btn-lg btn-primary" wire:click.prevent="newOrder">
                     <i class="fa fa-plus mr-1"></i>
                     NEW ORDER
                 </button>
-                <a href="{{route('order.index')}}" class="btn btn-lg btn-default">
-                    <i class="fa fa-list mr-1"></i>
-                    ORDER LIST
-                </a>
             </div>
         </div>
 
