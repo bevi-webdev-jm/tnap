@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 
 class Order extends Component
 {
+    public $date;
+
     public function render()
     {
         // Product order summary
@@ -21,6 +23,10 @@ class Order extends Component
             )
             ->leftJoin('products as p', 'p.id', '=', 'od.product_id')
             ->groupBy('p.stock_code', 'p.description')
+            ->when(!empty($this->date), function($query) {
+                $query->leftJoin('orders as o', 'o.id', '=', 'od.order_id')
+                    ->where('o.order_date', $this->date);
+            })
             ->get();
 
         $chartData = $orderDetails->map(fn($item) => [
@@ -29,13 +35,22 @@ class Order extends Component
             'x' => (float) $item->total_quantity,
         ]);
 
+        $this->dispatch('update-chart', data: $chartData);
+
         // Total unique customers
-        $totalCustomer = OrderModel::distinct('customer_name')->count('customer_name');
+        $totalCustomer = OrderModel::distinct('customer_name')
+            ->when(!empty($this->date), function($query) {
+                $query->where('order_date', $this->date);
+            })
+            ->count('customer_name');
 
         // Business associate (BA) total sales
         $baSales = DB::table('orders as o')
             ->select('u.name', DB::raw('SUM(o.total) as total_amount'))
             ->leftJoin('users as u', 'u.id', '=', 'o.user_id')
+            ->when(!empty($this->date), function($query) {
+                $query->where('o.order_date', $this->date);
+            })
             ->groupBy('u.name')
             ->get();
 
@@ -46,6 +61,9 @@ class Order extends Component
 
         // Payment type totals
         $paymentTypes = OrderModel::select('payment_type', DB::raw('SUM(total) as total_amount'))
+            ->when(!empty($this->date), function($query) {
+                $query->where('order_date', $this->date);
+            })
             ->groupBy('payment_type')
             ->get();
 
@@ -59,6 +77,9 @@ class Order extends Component
                 'status',
                 DB::raw('count(status) as total')
             )
+            ->when(!empty($this->date), function($query) {
+                $query->where('order_date', $this->date);
+            })
             ->groupBy('status')
             ->get();
         
@@ -70,4 +91,5 @@ class Order extends Component
             'order_status_data' => $order_status_data
         ]);
     }
+
 }

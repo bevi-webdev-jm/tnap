@@ -84,7 +84,9 @@
 @stop
 
 @section('auth_footer')
+{{-- 
     <a href="{{ route('google.login') }}" class="btn btn-danger btn-block">
         <i class="fab fa-google"></i> Login with Google
     </a>
+--}}
 @stop

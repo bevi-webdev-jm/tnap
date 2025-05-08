@@ -1,9 +1,18 @@
 <div>
     <div class="row">
+        <div class="col-lg-4">
+            <div class="form-group">
+                <label for="date">FILTER DATE</label>
+                <input type="date" class="form-control" wire:model.live="date" id="date">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body">
-                    <figure class="highcharts-figure">
+                    <figure class="highcharts-figure" wire:ignore>
                         <div id="container"></div>
                     </figure>
                 </div>
@@ -70,14 +79,14 @@
                         <thead>
                             <tr>
                                 <th>NAME</th>
-                                <th>TOTAL AMOUNT</th>
+                                <th class="text-center">TOTAL AMOUNT</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($payment_type_data as $data)
                                 <tr>
                                     <td>{{$data['name']}}</td>
-                                    <td>{{number_format($data['y'], 2)}}</td>
+                                    <td class="text-right">{{number_format($data['y'], 2)}}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -87,11 +96,12 @@
         </div>
     </div>
     
+    
+</div>
 
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
     <script>
-        (function (H) {
+        document.addEventListener('livewire:init', function() {
+            (function (H) {
             H.seriesTypes.pie.prototype.animate = function (init) {
                 const series = this,
                     chart = series.chart,
@@ -166,47 +176,42 @@
             };
         }(Highcharts));
 
-        Highcharts.chart('container', {
-            chart: {
-                type: 'pie'
-            },
-            title: {
-                text: 'Total Quantity and Amount per SKU'
-            },
-            tooltip: {
-                headerFormat: '',
-                pointFormat:
-                    '<span style="color:{point.color}">\u25cf</span> ' +
-                    '{point.name}: <b>{point.percentage:.1f}%</b><br>' +
-                    '<b>Amount:</b> {point.y}<br>' +
-                    '<b>Quantity:</b> {point.x}'
-            },
-            accessibility: {
-                point: {
-                    valueSuffix: '%'
-                }
-            },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    borderWidth: 2,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: true,
-                        format: '<b>{point.name}</b><br>{point.percentage:.1f}%',
-                        distance: 20
-                    }
-                }
-            },
-            series: [{
-                // Disable mouse tracking on load, enable after custom animation
-                enableMouseTracking: false,
-                animation: {
-                    duration: 2000
-                },
-                colorByPoint: true,
-                data: @json($chart_data)
-            }]
+            window.addEventListener('update-chart', event => {
+                const data = event.detail.data;
+
+                Highcharts.chart('container', {
+                    chart: { type: 'pie' },
+                    title: { text: 'Total Quantity and Amount per SKU' },
+                    tooltip: {
+                        headerFormat: '',
+                        pointFormat:
+                            '<span style="color:{point.color}">\u25cf</span> ' +
+                            '{point.name}: <b>{point.percentage:.1f}%</b><br>' +
+                            '<b>Amount:</b> {point.y}<br>' +
+                            '<b>Quantity:</b> {point.x}'
+                    },
+                    accessibility: { point: { valueSuffix: '%' } },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            borderWidth: 2,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b><br>{point.percentage:.1f}%',
+                                distance: 20
+                            }
+                        }
+                    },
+                    series: [{
+                        enableMouseTracking: false,
+                        animation: { duration: 500 },
+                        colorByPoint: true,
+                        data: data
+                    }]
+                });
+            });
         });
+            
+
     </script>
-</div>
