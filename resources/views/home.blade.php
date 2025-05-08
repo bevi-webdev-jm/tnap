@@ -42,6 +42,22 @@
                 </a>
             </div>
         @endcan
+
+        @can('order report')
+            <div class="col-lg-4 col-sm-12">
+                <a href="{{route('order.report')}}">
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3>ORDER REPORT</h3>
+                            <small class="mb-2">Order reports</small>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-chart-line"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        @endcan
     </div>
 
 @stop
@@ -60,10 +76,13 @@
         }
 
         .bg-info {
-            background: linear-gradient(0deg, rgb(54 207 201 / 70%), rgb(24 129 143));
+            background: linear-gradient(0deg, rgb(0 133 128 / 70%), rgb(0 197 223));
         }
         .bg-success {
-            background: linear-gradient(0deg, rgb(141 207 121), rgb(63 167 0))
+            background: linear-gradient(0deg, rgb(60 139 35), rgb(90 235 2));
+        }
+        .bg-danger {
+            background: linear-gradient(0deg, rgb(139 55 35), rgb(235 45 2));
         }
     </style>
 @endpush

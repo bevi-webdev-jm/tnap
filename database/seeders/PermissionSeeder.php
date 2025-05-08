@@ -21,10 +21,10 @@ class PermissionSeeder extends Seeder
                 'order access'      => 'Allow user to access order list and details',
                 'order create'      => 'Allow user to create order.',
                 'order re-order'    => 'Allow user to re-order.',
-                'order edit'        => 'Allow user to edit order details.',
                 'order cancel'      => 'Allow user to cancel order.',
-                'order complete'     => 'Allow user to complete order.',
+                'order complete'    => 'Allow user to complete order.',
                 'order history'     => 'Allow user to view order history.',
+                'order report'      => 'Allow user to access order reports,',
                 'order delete'      => 'Allow user to delete order.',
             ],
             'Companies' => [
