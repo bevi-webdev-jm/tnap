@@ -120,7 +120,7 @@
                         @if($order->status == 'submitted')
                             <button class="btn btn-success" wire:click.prevent="completeOrder">
                                 <i class="fa fa-check mr-1"></i>
-                                COMPLETED
+                                COMPLETE ORDER
                             </button>
                         @endif
                     @endcan

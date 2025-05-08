@@ -26,6 +26,9 @@ class OrderList extends Component
     public function render()
     {
         $orders = Order::orderBy('order_number', 'DESC')
+            ->when(!auth()->user()->hasRole('superadmin'), function($query) {
+                $query->where('user_id', auth()->user()->id);
+            })
             ->paginate($this->getDataPerPage(), ['*'], 'order-page');
 
         return view('livewire.orders.order-list')->with([
