@@ -35,6 +35,10 @@
             background-color:rgb(10, 90, 86);
             color: white;
         }
+
+        .summary-img {
+            max-width: 50px;
+        }
     </style>
 @endpush
 

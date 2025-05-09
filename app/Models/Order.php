@@ -19,7 +19,6 @@ class Order extends Model
         'order_date',
         'total',
         'status',
-        'payment_type',
     ];
 
     public function user() {
@@ -32,5 +31,9 @@ class Order extends Model
 
     public function logs() {
         return $this->hasMany('App\Models\OrderLog');
+    }
+
+    public function order_payment_types() {
+        return $this->hasMany('App\Models\OrderPaymentType');
     }
 }

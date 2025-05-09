@@ -17,10 +17,11 @@ class OrderList extends Component
     use SettingTrait;
 
     public $status_arr = [
-        'draft'         => 'secondary',
-        'submitted'     => 'info',
-        'cancelled'     => 'danger',
-        'completed'     => 'success',
+        'draft'             => 'secondary',
+        'submitted'         => 'info',
+        'cancelled'         => 'danger',
+        'payment received'  => 'primary',
+        'released'          => 'success',
     ];
 
     public function render()

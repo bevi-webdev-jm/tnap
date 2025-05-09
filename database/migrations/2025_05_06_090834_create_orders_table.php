@@ -20,7 +20,6 @@ return new class extends Migration
             $table->date('order_date');
             $table->decimal('total')->nullable();
             $table->string('status');
-            $table->string('payment_type');
             $table->timestamps();
 
             $table->foreign('user_id')

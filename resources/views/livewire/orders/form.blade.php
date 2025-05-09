@@ -44,6 +44,7 @@
                             </li>
                         </ul>
                     </div>
+
                     <!-- DETAILS -->
                     <div class="col-12 mt-2">
                         <ul class="list-group">
@@ -102,12 +103,121 @@
                 <h4 class="card-title">ORDER NUMBER</h4>
             </div>
             <div class="card-body text-center align-middle">
-                <strong class="text-xl">ORDER NUMBER: </strong>
-                <br>
-                <strong class="text-xl badge badge-success">{{$order->order_number}}</strong>
+
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <strong class="text-xl">ORDER NUMBER: </strong>
+                        <br>
+                        <strong class="text-xl badge badge-success">{{$order->order_number}}</strong>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row text-lg">
+                    <!-- HEADER -->
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title text-lg text-info font-weight-bold">ORDER HEADER</h3>
+                            </div>
+                            <div class="card-body p-0">
+                                <ul class="list-group">
+                                    <li class="list-group-item py-2">
+                                        <strong class="float-left">BA NAME</strong>
+                                        <span class="float-right">{{$order->user->name}}</span>
+                                    </li>
+                                    <li class="list-group-item py-2">
+                                        <strong class="float-left">CUSTOMER NAME</strong>
+                                        <span class="float-right">{{$order->customer_name}}</span>
+                                    </li>
+                                    <li class="list-group-item py-2">
+                                        <strong class="float-left">ADDRESS</strong>
+                                        <span class="float-right">{{$order->address}}</span>
+                                    </li>
+                                    <li class="list-group-item py-2">
+                                        <strong class="float-left">ORDER DATE</strong>
+                                        <span class="float-right">{{$order->order_date}}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- DETAILS -->
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title text-lg text-info font-weight-bold">ORDER DETAILS</h3>
+                            </div>
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>DESCRIPTION</th>
+                                            <th>PRICE</th>
+                                            <th>QUANTITY</th>
+                                            <th>AMOUNT</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($order->details as $detail)
+                                            <tr>
+                                                <td class="align-middle">
+                                                    <img src="{{asset($product_images_arr[$detail->product->stock_code])}}" alt="{{$detail->product->stock_code}}" class="summary-img">
+                                                </td>
+                                                <td class="align-middle">{{$detail->product->description}}</td>
+                                                <td class="align-middle">{{number_format($detail->product->price, 2)}}</td>
+                                                <td class="align-middle">{{number_format($detail->quantity, 2)}}</td>
+                                                <td class="align-middle">{{number_format($detail->amount, 2)}}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- SUMMARY -->
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title text-lg text-info font-weight-bold">ORDER SUMMARY</h3>
+                            </div>
+                            <div class="card-body p-0">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <strong class="float-left">TOTAL AMOUNT:</strong> 
+                                        <span class="float-right">{{number_format($order->total, 2)}}</span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <strong class="float-left">PAYMENT TYPE:</strong> 
+                                            </div>
+                                            <div class="col-lg-6">
+                                                @foreach($order->order_payment_types as $order_payment_type)
+                                                    <div class="row">
+                                                        <div class="col-10">
+                                                            <span>{{$order_payment_type->payment_type->type}}</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <span class="float-right">{{number_format($order_payment_type->amount, 2)}}</span>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                               
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <div class="card-footer text-right">
-                <button class="btn btn-lg btn-primary" wire:click.prevent="newOrder">
+                <button class="btn btn-lg btn-info" wire:click.prevent="newOrder">
                     <i class="fa fa-plus mr-1"></i>
                     NEW ORDER
                 </button>
@@ -234,12 +344,22 @@
                             <span class="badge badge-danger">REQUIRED</span>
                         @endif
                         <ul class="list-group">
-                            @foreach($payment_types_arr as $type)
-                                <a href="" wire:click.prevent="selectPaymentType('{{$type}}')">
-                                    <li class="list-group-item {{$payment_type == $type ? 'type-selected' : ''}}">
-                                        <strong class="text-lg">{{$type}}</strong>
-                                    </li>
-                                </a>
+                            @foreach($payment_types as $payment_type)
+                                <li class="list-group-item border my-1 {{isset($payment_type_arr[$payment_type->id]) ? 'type-selected' : ''}}" wire:click.prevent="selectPaymentType({{$payment_type->id}})">
+                                    @if(isset($payment_type_arr[$payment_type->id]) && count($payment_type_arr) > 1)
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <strong class="text-lg">{{$payment_type->type}}</strong>
+                                            </div>
+                                            <div class="col-6">
+                                                <input type="number" class="form-control form-control-sm border-0 border-bottom" wire:model.live="payment_type_arr.{{$payment_type->id}}" onclick="event.stopPropagation();">
+                                            </div>
+                                        </div>
+                                    @else
+                                        <strong class="text-lg">{{$payment_type->type}}</strong>
+                                    @endif
+                                    
+                                </li>
                             @endforeach
                         </ul>
                     </div>
@@ -249,7 +369,7 @@
             <div class="card-footer text-right">
                 <button class="btn btn-primary btn-lg" wire:click.prevent="saveOrder">
                     <i class="fa fa-save mr-1"></i>
-                    SAVE
+                    SUBMIT
                 </button>
             </div>
         </div>

@@ -7,14 +7,16 @@ use Livewire\Component;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\OrderPaymentType;
 use App\Models\OrderLog;
+use App\Models\PaymentType;
 
 use Illuminate\Support\Facades\Session;
 
 class Form extends Component
 {
     public $ba_name, $customer_name, $address, $order_date;
-    public $payment_type;
+    public $payment_type_arr;
     public $total_amount = 0;
     public $details;
     public $products;
@@ -30,20 +32,15 @@ class Form extends Component
         'KS99077' => 'images/100GX3.jpg',
     ];
 
-    public $payment_types_arr = [
-        'CASH', 
-        'GCASH', 
-        'P-WALLET', 
-        'DEBIT', 
-        'CC', 
-        'OTHERS',
-    ];
-
     public function render()
     {
         $this->computeTotal();
 
-        return view('livewire.orders.form');
+        $payment_types = PaymentType::all();
+
+        return view('livewire.orders.form')->with([
+            'payment_types' => $payment_types
+        ]);
     }
 
     public function mount() {
@@ -53,7 +50,7 @@ class Form extends Component
         $this->products = Product::all();
 
         foreach($this->products as $product) {
-            $this->details[$product->id]['quantity'] = 0;
+            $this->details[$product->id]['quantity'] = NULL;
             $this->details[$product->id]['amount'] = NULL;
         }
 
@@ -67,8 +64,12 @@ class Form extends Component
 
     }
 
-    public function selectPaymentType($type) {
-        $this->payment_type = $type;
+    public function selectPaymentType($payment_type_id) {
+        if(isset($this->payment_type_arr[$payment_type_id])) {
+            unset($this->payment_type_arr[$payment_type_id]);
+        } else {
+            $this->payment_type_arr[$payment_type_id] = '';
+        }
     }
 
     public function computeTotal() {
@@ -118,9 +119,6 @@ class Form extends Component
             'address' => [
                 'max:255'
             ],
-            'payment_type' => [
-                'required'
-            ],
         ]);
 
         $order = new Order([
@@ -130,43 +128,38 @@ class Form extends Component
             'address' => $this->address,
             'order_date' => date('Y-m-d'),
             'total' => $this->total_amount,
-            'status' => 'draft',
-            'payment_type' => $this->payment_type,
+            'status' => 'submitted',
         ]);
         $order->save();
 
         $this->order = $order;
 
+        // details
         foreach($this->details as $product_id => $data) {
-            $order_detail = new OrderDetail([
+            if(!empty($data['quantity'])) {
+                $order_detail = new OrderDetail([
+                    'order_id' => $order->id,
+                    'product_id' => $product_id,
+                    'quantity' => $data['quantity'],
+                    'amount' => $data['amount'],
+                ]);
+                $order_detail->save();
+            }
+        }
+
+        // payment types
+        foreach($this->payment_type_arr as $type_id => $amount) {
+            if(count($this->payment_type_arr) <= 1) {
+                $amount = $this->total_amount;
+            }
+            $order_payment_type = new OrderPaymentType([
                 'order_id' => $order->id,
-                'product_id' => $product_id,
-                'quantity' => $data['quantity'],
-                'amount' => $data['amount'],
+                'payment_type_id' => $type_id,
+                'amount' => $amount ?? 0
             ]);
-            $order_detail->save();
+            $order_payment_type->save();
         }
         
-       
-        // order log
-        $order_log = new OrderLog([
-            'order_id' => $this->order->id,
-            'user_id' => auth()->user()->id,
-            'status' => 'draft',
-            'remarks' => NULL
-        ]);
-        $order_log->save();
-        
-
-        $this->show_summary = 1;
-    }
-
-    public function submitOrder() {
-
-        $this->order->update([
-            'status' => 'submitted'
-        ]);
-
         // order log
         $order_log = new OrderLog([
             'order_id' => $this->order->id,
@@ -175,7 +168,7 @@ class Form extends Component
             'remarks' => NULL
         ]);
         $order_log->save();
-
+        
         // log
         activity('created')
             ->performedOn($this->order)
@@ -185,6 +178,7 @@ class Form extends Component
     }
 
     public function newOrder() {
-        $this->resetExcept('ba_name', 'order_date', 'products');
+
+        return redirect()->route('order.create');
     }
 }
