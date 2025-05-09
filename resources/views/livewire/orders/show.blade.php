@@ -3,7 +3,7 @@
         <div class="card-header">
             <div class="row">
                 <div class="col-lg-6">
-                    <span class="badge badge-{{$status_arr[$order->status]}} text-lg">{{$order->status}}</span>
+                    <span class="badge badge-{{$status_arr[$order->status]}} text-lg text-uppercase">{{$order->status}}</span>
                 </div>
                 <div class="col-lg-6 mt-1 text-right">
                     <a href="{{route('order.index')}}" class="btn btn-default btn-sm">
@@ -12,7 +12,7 @@
                     </a>
 
                     @if($order->status == 'draft')
-                        <button class="btn btn-primary btn-sm" wire:click.prevent="submitOrder">
+                        <button class="btn btn-primary btn-sm" wire:click.prevent="updateOrderStatus('submitted')">
                             <i class="fa fa-save mr-1"></i>
                             SUBMIT
                         </button>
@@ -20,7 +20,7 @@
 
                     @can('order cancel')
                         @if($order->status == 'draft' || $order->status == 'submitted')
-                            <button class="btn btn-danger btn-sm" wire:click.prevent="cancelOrder">
+                            <button class="btn btn-danger btn-sm" wire:click.prevent="updateOrderStatus('cancelled')">
                                 <i class="fa fa-ban mr-1"></i>
                                 CANCEL
                             </button>
@@ -32,6 +32,24 @@
                             <i class="fa fa-recycle mr-1"></i>
                             RE-ORDER
                         </button>
+                    @endcan
+
+                    @can('order complete')
+                        @if($order->status == 'submitted')
+                            <button class="btn btn-primary btn-sm" wire:click.prevent="updateOrderStatus('payment received')">
+                                <i class="fa fa-check mr-1"></i>
+                                PAYMENT RECEIVED
+                            </button>
+                        @endif
+                    @endcan
+
+                    @can('order complete')
+                        @if($order->status == 'payment received')
+                            <button class="btn btn-success btn-sm" wire:click.prevent="updateOrderStatus('released')">
+                                <i class="fa fa-check mr-1"></i>
+                                RELEASED
+                            </button>
+                        @endif
                     @endcan
                 </div>
             </div>
@@ -76,11 +94,27 @@
                             <strong>TOTAL AMOUNT:</strong> <span class="float-right">{{number_format($order->total, 2)}}</span>
                         </li>
                         <li class="list-group-item">
-                            <strong>PAYMENT TYPE:</strong> <span class="float-right">{{$order->payment_type}}</span>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <strong class="float-left">PAYMENT TYPE:</strong> 
+                                </div>
+                                <div class="col-lg-6">
+                                    @foreach($order->order_payment_types as $order_payment_type)
+                                        <div class="row">
+                                            <div class="col-10">
+                                                <span>{{$order_payment_type->payment_type->type}}</span>
+                                            </div>
+                                            <div class="col-2">
+                                                <span class="float-right">{{number_format($order_payment_type->amount, 2)}}</span>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                    
+                                </div>
+                            </div>
                         </li>
                     </ul>
                 </div>
-                
             </div>
         </div>
 
@@ -114,16 +148,6 @@
                             @endforeach
                         </tbody>
                     </table>
-                </div>
-                <div class="card-footer text-right">
-                    @can('order complete')
-                        @if($order->status == 'submitted')
-                            <button class="btn btn-success" wire:click.prevent="completeOrder">
-                                <i class="fa fa-check mr-1"></i>
-                                COMPLETE ORDER
-                            </button>
-                        @endif
-                    @endcan
                 </div>
             </div>
             

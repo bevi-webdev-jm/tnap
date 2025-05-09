@@ -14,10 +14,11 @@ class Show extends Component
     public $order;
 
     public $status_arr = [
-        'draft'         => 'secondary',
-        'submitted'     => 'info',
-        'cancelled'     => 'danger',
-        'completed'     => 'success',
+        'draft'             => 'secondary',
+        'submitted'         => 'info',
+        'cancelled'         => 'danger',
+        'payment received'  => 'primary',
+        'released'          => 'success',
     ];
 
     public $product_images_arr = [
@@ -30,92 +31,43 @@ class Show extends Component
     public function render()
     {
         $approval_dates = OrderLog::select(DB::raw('DATE(created_at) as date'))
-            ->groupBy('date')
-            ->orderBy('date', 'DESC')
             ->where('order_id', $this->order->id)
+            ->groupBy('date')
+            ->orderByDesc('date')
             ->paginate(5, ['*'], 'order-log-page');
 
-        $approval_data = [];
-        foreach($approval_dates as $data) {
-            $approvals = OrderLog::with('user')
-                ->orderBy('created_at', 'DESC')
-                ->where('order_id', $this->order->id)
-                ->where(DB::raw('DATE(created_at)'), $data->date)
-                ->get();
-            
-            $approval_data[$data->date] = $approvals;
-        }
+        // Fetch all logs in one query to avoid N+1
+        $all_logs = OrderLog::with('user')
+            ->where('order_id', $this->order->id)
+            ->orderByDesc('created_at')
+            ->get()
+            ->groupBy(fn($log) => $log->created_at->toDateString());
 
-        return view('livewire.orders.show')->with([
+        return view('livewire.orders.show', [
             'approval_dates' => $approval_dates,
-            'approvals' => $approval_data
+            'approvals' => $all_logs,
         ]);
     }
 
-    public function submitOrder() {
-        $this->order->update([
-            'status' => 'submitted'
-        ]);
-
-        // order log
-        $log = new OrderLog([
-            'order_id' => $this->order->id,
-            'user_id' => auth()->user()->id,
-            'status' => 'submitted',
-            'remarks' => NULL
-        ]);
-        $log->save();
-
-        // log
-        activity('submitted')
-            ->performedOn($this->order)
-            ->log(':causer.name submitted an order :subject.order_number');
-
-    }
-
-    public function cancelOrder() {
-        $this->order->update([
-            'status' => 'cancelled'
-        ]);
-
-        // order log
-        $log = new OrderLog([
-            'order_id' => $this->order->id,
-            'user_id' => auth()->user()->id,
-            'status' => 'cancelled',
-            'remarks' => NULL
-        ]);
-        $log->save();
-
-        // log
-        activity('cancelled')
-            ->performedOn($this->order)
-            ->log(':causer.name cancelled an order :subject.order_number');
-    }
-
-    public function reOrder() {
+    public function reOrder()
+    {
         Session::put('re-order-data', $this->order);
-
         return redirect()->route('order.create');
     }
 
-    public function completeOrder() {
-        $this->order->update([
-            'status' => 'completed'
-        ]);
+    public function updateOrderStatus(string $status): void
+    {
+        $this->order->update(['status' => $status]);
 
-        // order log
-        $log = new OrderLog([
+        OrderLog::create([
             'order_id' => $this->order->id,
-            'user_id' => auth()->user()->id,
-            'status' => 'completed',
-            'remarks' => NULL
+            'user_id'  => auth()->id(),
+            'status'   => $status,
+            'remarks'  => null,
         ]);
-        $log->save();
 
-        // log
-        activity('completed')
+        activity($status)
             ->performedOn($this->order)
-            ->log(':causer.name completed an order :subject.order_number');
+            ->log(":causer.name {$status} an order :subject.order_number");
     }
 }

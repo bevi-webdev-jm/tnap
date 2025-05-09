@@ -21,5 +21,6 @@ class DatabaseSeeder extends Seeder
         $this->call([SystemSettingSeeder::class]);
 
         $this->call([ProductSeeder::class]);
+        $this->call([PaymentTypeSeeder::class]);
     }
 }

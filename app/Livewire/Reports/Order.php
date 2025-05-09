@@ -60,15 +60,21 @@ class Order extends Component
         ]);
 
         // Payment type totals
-        $paymentTypes = OrderModel::select('payment_type', DB::raw('SUM(total) as total_amount'))
+        $paymentTypes = DB::table('order_payment_types as apt')
+            ->select(
+                'type',
+                DB::raw('SUM(total) as total_amount')
+            )
+            ->leftJoin('orders as o', 'o.id', '=', 'apt.order_id')
+            ->leftJoin('payment_types as pt', 'pt.id', '=', 'apt.payment_type_id')
             ->when(!empty($this->date), function($query) {
                 $query->where('order_date', $this->date);
             })
-            ->groupBy('payment_type')
+            ->groupBy('type')
             ->get();
 
         $paymentTypeData = $paymentTypes->map(fn($item) => [
-            'name' => $item->payment_type,
+            'name' => $item->type,
             'y' => (float) $item->total_amount,
         ]);
 
