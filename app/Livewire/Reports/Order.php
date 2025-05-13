@@ -7,6 +7,9 @@ use Livewire\Component;
 use App\Models\Order as OrderModel;
 use Illuminate\Support\Facades\DB;
 
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\OrderExport;
+
 class Order extends Component
 {
     public $date;
@@ -96,6 +99,10 @@ class Order extends Component
             'payment_type_data' => $paymentTypeData,
             'order_status_data' => $order_status_data
         ]);
+    }
+
+    public function exportData() {
+        return Excel::download(new OrderExport($this->date), 'Order data export-'.time().'.xlsx');
     }
 
 }
