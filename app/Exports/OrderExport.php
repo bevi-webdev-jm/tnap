@@ -16,7 +16,7 @@ class OrderExport implements FromCollection, WithHeadings, WithStyles, ShouldAut
 {
     public $date;
 
-    public function __contruct($date) {
+    public function __construct($date) {
         $this->date = $date;
     }
 
@@ -68,7 +68,7 @@ class OrderExport implements FromCollection, WithHeadings, WithStyles, ShouldAut
         $rows = [];
 
         $orders = Order::orderBy('order_number', 'ASC')
-            ->when($this->date, function ($query) {
+            ->when(!empty($this->date), function ($query) {
                 $query->where('order_date', $this->date);
             })
             ->get();
