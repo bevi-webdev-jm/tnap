@@ -20,7 +20,7 @@
     {{-- Add here extra stylesheets --}}
     <style>
         .row-hover {
-            background: linear-gradient(1deg, rgb(255 255 255), rgb(57 55 55 / 8%));
+            background: linear-gradient(1deg, rgb(255 255 250), rgb(197 231 8 / 58%));
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
             backdrop-filter: blur(12px);
