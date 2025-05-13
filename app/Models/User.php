@@ -54,7 +54,7 @@ class User extends Authenticatable
     public function adminlte_image()
     {
         // random image
-        return asset($this->profile_pic) ?? 'https://picsum.photos/600/600';
+        return !empty($this->profile_pic) ? asset($this->profile_pic) : asset('images/Default_pfp.svg.png');
     }
 
     public function adminlte_desc()
