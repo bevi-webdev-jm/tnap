@@ -43,7 +43,7 @@
                         @endif
                     @endcan
 
-                    @can('order complete')
+                    @can('order release')
                         @if($order->status == 'payment received')
                             <button class="btn btn-success btn-sm" wire:click.prevent="updateOrderStatus('released')">
                                 <i class="fa fa-check mr-1"></i>
