@@ -27,7 +27,7 @@ class OrderList extends Component
     public function render()
     {
         $orders = Order::orderBy('order_number', 'DESC')
-            ->when(!auth()->user()->hasRole('superadmin'), function($query) {
+            ->when(!auth()->user()->hasRole('superadmin') && !auth()->user()->hasRole('Admin') && !auth()->user()->hasRole('Release'), function($query) {
                 $query->where('user_id', auth()->user()->id);
             })
             ->paginate($this->getDataPerPage(), ['*'], 'order-page');
