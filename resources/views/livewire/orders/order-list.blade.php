@@ -1,5 +1,5 @@
 <div>
-    <div class="card">
+    <div class="card" wire:poll.1000ms>
         <div class="card-header">
             <h3 class="card-title text-xl">ORDER LIST</h3>
             <div class="card-tools">
@@ -14,6 +14,12 @@
         <div class="card-body">
 
             <div class="row">
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label for="search">SEARCH</label>
+                        <input type="text" class="form-control" wire:model.live="search" placeholder="Search">
+                    </div>
+                </div>
                 <div class="col-12">
                     {{$orders->links()}}
                 </div>
