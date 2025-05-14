@@ -33,6 +33,9 @@
                             case 'released':
                                 $row_bg = 'bg-secondary';
                             break;
+                            case 'cancelled':
+                                $row_bg = 'bg-warning';
+                            break;
                         }
                     @endphp
                     <a href="{{route('order.show', encrypt($order->id))}}" class="text-dark text-lg">
