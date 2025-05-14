@@ -21,35 +21,49 @@
 
             <ul class="list-group">
                 @foreach($orders as $order)
+                    @php
+                        $row_bg = '';
+                        switch($order->status) {
+                            case 'submitted':
+                                $row_bg = 'bg-danger';
+                            break;
+                            case 'payment received':
+                                $row_bg = 'bg-info';
+                            break;
+                            case 'released':
+                                $row_bg = 'bg-secondary';
+                            break;
+                        }
+                    @endphp
                     <a href="{{route('order.show', encrypt($order->id))}}" class="text-dark text-lg">
-                        <li class="list-group-item row-hover">
+                        <li class="list-group-item row-hover {{$row_bg}}">
                             <div class="row">
                                 <div class="col-lg-2 text-center align-middle">
                                     <strong>
                                         {{$order->order_number}}
                                         <br>
-                                        <small class="text-sm text-muted">ORDER NUMBER</small>
+                                        <small class="text-sm">ORDER NUMBER</small>
                                     </strong>
                                 </div>
                                 <div class="col-lg-3 text-center align-middle">
                                     <strong>
                                         {{$order->user->name}}
                                         <br>
-                                        <small class="text-sm text-muted">BA NAME</small>
+                                        <small class="text-sm">BA NAME</small>
                                     </strong>
                                 </div>
                                 <div class="col-lg-3 text-center align-middle">
                                     <strong>
                                         {{$order->customer_name}}
                                         <br>
-                                        <small class="text-sm text-muted">CUSTOMER NAME</small>
+                                        <small class="text-sm">CUSTOMER NAME</small>
                                     </strong>
                                 </div>
                                 <div class="col-lg-2 text-center align-middle">
                                     <strong>
                                         {{number_format($order->total, 2)}}
                                         <br>
-                                        <small class="text-sm text-muted">TOTAL AMOUNT</small>
+                                        <small class="text-sm">TOTAL AMOUNT</small>
                                     </strong>
                                 </div>
                                 <div class="col-lg-2 text-center align-middle">
@@ -58,7 +72,7 @@
                                             {{$order->status}}
                                         </span>
                                         <br>
-                                        <small class="text-sm text-muted">STATUS</small>
+                                        <small class="text-sm">STATUS</small>
                                     </strong>
                                 </div>
                             </div>
