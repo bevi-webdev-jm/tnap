@@ -20,6 +20,8 @@ var filesToCache = [
     "/images/45G.png",
     "/images/65GX3.png",
     "/images/100GX3.jpg",
+    "/images/Default_pfp.svg.png",
+    "/home",
 ];
 
 // Cache on install
@@ -59,3 +61,9 @@ self.addEventListener("fetch", (event) => {
             })
     );
 });
+
+if (!navigator.onLine) {
+    console.log("You are offline.");
+} else {
+    console.log("You are online.");
+}

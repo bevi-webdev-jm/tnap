@@ -279,8 +279,8 @@
                                         {{$product->description}}
                                     </strong>
                                     <br>
-                                    <strong class="text-lg badge badge-success">
-                                        PHP {{$product->price}}
+                                    <strong class="text-lg badge badge-success prod-price">
+                                        {{$product->price}}
                                     </strong>
                                 </div>
                                 <div class="card-body">
@@ -297,13 +297,13 @@
                                                         $qtyModel = "details.{$product->id}.quantity";
                                                         $amountModel = "details.{$product->id}.amount";
                                                     @endphp
-                                                    <input type="number" class="form-control form-control-lg" placeholder="Quantity" wire:model.live="{{$qtyModel}}" id="quantity{{$product->id}}">
+                                                    <input type="number" class="form-control form-control-lg prod-qty" placeholder="Quantity" wire:model.live="{{$qtyModel}}" id="quantity{{$product->id}}">
                                                 </div>
                                             </div>
                                             <div class="form-group row mb-2">
                                                 <label for="customer_name" class="col-sm-3 col-form-label text-lg">AMOUNT</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control form-control-lg bg-white" placeholder="Amount" readonly wire:model="details.{{$product->id}}.amount">
+                                                    <input type="text" class="form-control form-control-lg bg-white prod-amount" placeholder="Amount" readonly wire:model="details.{{$product->id}}.amount">
                                                 </div>
                                             </div>
                                         </div>
