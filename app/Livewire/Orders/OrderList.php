@@ -45,4 +45,8 @@ class OrderList extends Component
             'orders' => $orders
         ]);
     }
+
+    public function updatedSearch() {
+        $this->resetPage('order-page');
+    }
 }
