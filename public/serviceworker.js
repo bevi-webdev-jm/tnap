@@ -21,7 +21,6 @@ var filesToCache = [
     "/images/65GX3.png",
     "/images/100GX3.jpg",
     "/images/Default_pfp.svg.png",
-    "/home",
 ];
 
 // Cache on install

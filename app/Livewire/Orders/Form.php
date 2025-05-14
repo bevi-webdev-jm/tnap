@@ -119,6 +119,9 @@ class Form extends Component
             'address' => [
                 'max:255'
             ],
+            'payment_type_arr' => [
+                'required'
+            ]
         ]);
 
         $order = new Order([
