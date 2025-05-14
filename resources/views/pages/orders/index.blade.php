@@ -9,6 +9,15 @@
 {{-- Content body: main page content --}}
 
 @section('content_body')
+    
+    <div class="row mb-2">
+        <div class="col-12 text-right">
+            <a href="{{route('order.index')}}" class="btn btn-success">
+                <i class="fa fa-sync mr-1"></i>
+                REFRESH
+            </a>
+        </div>
+    </div>
 
     <livewire:orders.order-list/>
 
@@ -20,7 +29,7 @@
     {{-- Add here extra stylesheets --}}
     <style>
         .row-hover {
-            background: linear-gradient(1deg, rgb(255 255 250), rgb(255 251 204 / 58%));
+            /* background: linear-gradient(1deg, rgb(255 255 250), rgb(255 251 204 / 58%)); */
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
             backdrop-filter: blur(12px);
