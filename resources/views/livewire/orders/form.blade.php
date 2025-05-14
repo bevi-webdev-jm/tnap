@@ -340,7 +340,7 @@
 
                     <div class="col-lg-6">
                         <strong class="text-lg">PAYMENT TYPE</strong>
-                        @if($errors->has('payment_type'))
+                        @if($errors->has('payment_type_arr'))
                             <span class="badge badge-danger">REQUIRED</span>
                         @endif
                         <ul class="list-group">
@@ -367,7 +367,7 @@
                 </div>
             </div>
             <div class="card-footer text-right">
-                <button class="btn btn-primary btn-lg" wire:click.prevent="saveOrder">
+                <button class="btn btn-primary btn-lg" wire:click.prevent="saveOrder" wire:loading.attr="disabled">
                     <i class="fa fa-save mr-1"></i>
                     SUBMIT
                 </button>
