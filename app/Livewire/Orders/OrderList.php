@@ -24,11 +24,20 @@ class OrderList extends Component
         'released'          => 'success',
     ];
 
+    public $search;
+
     public function render()
     {
         $orders = Order::orderBy('order_number', 'DESC')
             ->when(!auth()->user()->hasRole('superadmin') && !auth()->user()->hasRole('Admin') && !auth()->user()->hasRole('Release'), function($query) {
                 $query->where('user_id', auth()->user()->id);
+            })
+            ->when(!empty($this->search), function($query) {
+                $query->where(function($qry) {
+                    $qry->where('order_number', 'like', '%'.$this->search.'%')
+                        ->orWhere('customer_name', 'like', '%'.$this->search.'%')
+                        ->orWhere('status', 'like', '%'.$this->search.'%');
+                });
             })
             ->paginate($this->getDataPerPage(), ['*'], 'order-page');
 
