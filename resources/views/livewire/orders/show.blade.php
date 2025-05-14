@@ -154,7 +154,7 @@
             @can('order history')
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">APPROVALS</h3>
+                        <h3 class="card-title">ORDER HISTORY</h3>
                     </div>
                     <div class="card-body">
 
@@ -177,7 +177,7 @@
                                             <span class="time"><i class="far fa-clock"></i> {{$approval->created_at->diffForHumans()}}</span>
             
                                             <h3 class="timeline-header {{!empty($approval->remarks) ? '' : 'border-0'}}">
-                                                <a href="#">{{$approval->user->name}}</a> <span class="mx-2 badge bg-{{$status_arr[$approval->status]}}">{{$approval->status}}</span> the trip request
+                                                <a href="#">{{$approval->user->name}}</a> <span class="mx-2 badge bg-{{$status_arr[$approval->status]}}">{{$approval->status}}</span> the order
                                             </h3>
             
                                             @if(!empty($approval->remarks))
