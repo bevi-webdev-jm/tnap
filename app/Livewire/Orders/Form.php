@@ -144,7 +144,7 @@ class Form extends Component
                     'order_id' => $order->id,
                     'product_id' => $product_id,
                     'quantity' => $data['quantity'],
-                    'amount' => $data['amount'],
+                    'amount' => $data['quantity'] * 200,
                 ]);
                 $order_detail->save();
             }
